@@ -17,3 +17,4 @@ tools/.cache/
 # Downloaded sample images (see tools/images/CREDITS.md)
 tools/images/*.jpg
 tools/images/*.png
+detections.csv

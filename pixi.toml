@@ -30,8 +30,9 @@ mojo-compiler = "==1.0.0"
 mojo-compiler = ">=1.0.0,<2"
 
 [tasks]
-test = "mojo run -I src tests/test_ops.mojo"
-infer = "mojo run -I src src/main.mojo data/weights.lft data/vocab.txt data/sample_0.lft"
+test = "mojo run -O3 -I src tests/test_ops.mojo"
+infer = "mojo run -O3 -I src src/main.mojo data/weights.lft data/vocab.txt data/sample_0.lft data/sample_1.lft data/sample_2.lft"
+detect = '''mojo run -O3 -I src src/main.mojo data/weights.lft data/vocab.txt --image data/sample_1.ppm --prompt "excavator . crane . worker ." --csv detections.csv'''
 
 [feature.nightly.dependencies]
 modular = ">=26.6.0.dev2026082605,<27"

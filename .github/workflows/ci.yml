@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.env == 'default' && 'nightly' || matrix.env }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        env: [default, stable]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: prefix-dev/setup-pixi@v0.9.0
+        with:
+          environments: ${{ matrix.env }}
+
+      - name: Unit tests
+        run: pixi run -e ${{ matrix.env }} test
+
+  parity:
+    # The parity run needs the exported weights (~693 MB), which are not published
+    # anywhere, so it is manual-only. TODO: host weights.lft + the sample fixtures
+    # somewhere fetchable (or regenerate them here from the HF checkpoint with
+    # tools/export_weights.py, which needs torch + transformers in CI) and make this
+    # job run on push.
+    name: PyTorch parity (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: prefix-dev/setup-pixi@v0.9.0
+        with:
+          environments: default
+
+      - name: Install exporter tools
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync --project tools
+
+      - name: Export weights and parity fixtures
+        run: |
+          PYTHONPATH=tools uv run --project tools python tools/export_weights.py --out data
+          for spec in "street.jpg|car . person . truck .|0" \
+                      "excavator.jpg|excavator . crane . worker .|1" \
+                      "cats.jpg|a cat . a remote control .|2"; do
+            IFS='|' read -r img prompt idx <<< "$spec"
+            PYTHONPATH=tools uv run --project tools python tools/export_sample.py \
+              --image "tools/images/$img" --prompt "$prompt" --index "$idx"
+          done
+
+      - name: Inference parity vs PyTorch
+        run: |
+          pixi run infer | tee infer.log
+          grep -q "PARITY: PASS" infer.log
