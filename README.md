@@ -41,7 +41,10 @@ a closed-vocabulary COCO detector cannot serve.
   - `image` — binary PPM reading, resizing and ImageNet normalization
 - `src/main.mojo` — CLI: parity mode and standalone detection
 - `tests/test_ops.mojo` — 26 hand-computed unit tests
-- `tools/` — a `uv` project that exports the HF checkpoint and the parity fixtures
+- `tools/` — a `uv` project: `export_weights.py` (HF checkpoint → `data/weights.lft` +
+  `data/vocab.txt`), `export_sample.py` (image + prompt → a parity fixture with every
+  reference intermediate), `export_debug.py` (per-sublayer dumps for localizing divergence)
+  and `reference.py` (run `transformers` end-to-end for comparison)
 
 ## Supported Mojo versions
 
@@ -171,6 +174,11 @@ One image, single-threaded, Apple M4 (24 GB), `mojo run -O3`:
 | COCO street scene | 800 × 1066 | 8.6 s |
 | construction photo | 760 × 1333 | 10.4 s |
 | COCO cats | 800 × 1066 | 8.7 s |
+
+For comparison, `transformers` on the same machine takes ~2.6 s for the construction photo
+(`PYTHONPATH=tools uv run --project tools python tools/reference.py --image
+tools/images/excavator.jpg --prompt "excavator . crane . worker ."`) — it spreads its GEMMs
+across all 10 cores through Accelerate, which is most of the 4x gap.
 
 Loading `weights.lft` takes another ~0.3 s. Roughly 700 GFLOP go into one image, most of it
 in the encoder's feed-forward networks and the vision/text fusion projections; the matmul is
