@@ -128,8 +128,8 @@ def _row_tail(
     for r in range(rows):
         var i = i0 + r
         var acc = SIMD[DType.float32, VW](0)
-        var xp = x + i * k
-        var wp = w + j * k
+        var xp = x.unsafe_offset(i * k)
+        var wp = w.unsafe_offset(j * k)
         var t = 0
         while t + VW <= k:
             acc = xp.unsafe_load[width=VW](t).fma(wp.unsafe_load[width=VW](t), acc)
@@ -149,18 +149,18 @@ def _micro_kernel(
     """Blocked 6x4 micro-kernel: ``dst[i, j] = dot(x[i, :], w[j, :]) + bias[j]``."""
     var i = m0
     while i + 6 <= m1:
-        var xp0 = x + (i + 0) * k
-        var xp1 = x + (i + 1) * k
-        var xp2 = x + (i + 2) * k
-        var xp3 = x + (i + 3) * k
-        var xp4 = x + (i + 4) * k
-        var xp5 = x + (i + 5) * k
+        var xp0 = x.unsafe_offset((i + 0) * k)
+        var xp1 = x.unsafe_offset((i + 1) * k)
+        var xp2 = x.unsafe_offset((i + 2) * k)
+        var xp3 = x.unsafe_offset((i + 3) * k)
+        var xp4 = x.unsafe_offset((i + 4) * k)
+        var xp5 = x.unsafe_offset((i + 5) * k)
         var j = 0
         while j + 4 <= n:
-            var wp0 = w + (j + 0) * k
-            var wp1 = w + (j + 1) * k
-            var wp2 = w + (j + 2) * k
-            var wp3 = w + (j + 3) * k
+            var wp0 = w.unsafe_offset((j + 0) * k)
+            var wp1 = w.unsafe_offset((j + 1) * k)
+            var wp2 = w.unsafe_offset((j + 2) * k)
+            var wp3 = w.unsafe_offset((j + 3) * k)
             var a00 = SIMD[DType.float32, VW](0)
             var a01 = SIMD[DType.float32, VW](0)
             var a02 = SIMD[DType.float32, VW](0)
@@ -503,6 +503,16 @@ def inverse_sigmoid(v: Float32, eps: Float32) -> Float32:
     if x > 1.0 - eps:
         x = 1.0 - eps
     return log(x / (1.0 - x))
+
+
+def keep_alive(x: Tensor):
+    """Extend a tensor's lifetime past the last use of a raw pointer into it.
+
+    Mojo destroys a value at its last *use*, and `x.ptr()` is a use of `x` -- so a
+    local tensor read only through its pointer is freed underneath that pointer.
+    Calling this at the end of such a function moves the last use to the right place.
+    """
+    pass
 
 
 def max_abs_diff(a: Tensor, b: Tensor) raises -> Float32:
