@@ -34,7 +34,7 @@ from lft import MODEL_ID, write_lft
 # proj{L}.conv.{w,b}, proj{L}.gn.{w,b}     input_proj_vision (L = 0..3)
 # level_embed                      (4, 256)
 # bert.{word_emb,pos_emb,tok_emb}, bert.emb_norm.{w,b}
-# bert.l{I}.{q,k,v,attn_out,attn_norm,inter,out,out_norm}.{w,b}
+# bert.l{I}.{q,k,v,out,attn_norm,inter,ffn_out,ffn_norm}.{w,b}
 # text_proj.{w,b}
 # enc{I}.te.{q,k,v,out,fc1,fc2,ln_before,ln_after}.{w,b}
 # enc{I}.fu.{ln_v,ln_t,vision_proj,text_proj,vv_proj,vt_proj,out_v,out_t}.{w,b}
@@ -130,11 +130,11 @@ class Exporter:
             self.lin(f"{p}.q", layer.attention.self.query)
             self.lin(f"{p}.k", layer.attention.self.key)
             self.lin(f"{p}.v", layer.attention.self.value)
-            self.lin(f"{p}.attn_out", layer.attention.output.dense)
+            self.lin(f"{p}.out", layer.attention.output.dense)
             self.norm(f"{p}.attn_norm", layer.attention.output.LayerNorm)
             self.lin(f"{p}.inter", layer.intermediate.dense)
-            self.lin(f"{p}.out", layer.output.dense)
-            self.norm(f"{p}.out_norm", layer.output.LayerNorm)
+            self.lin(f"{p}.ffn_out", layer.output.dense)
+            self.norm(f"{p}.ffn_norm", layer.output.LayerNorm)
 
     def encoder(self, encoder) -> None:
         for i, layer in enumerate(encoder.layers):
