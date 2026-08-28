@@ -39,6 +39,20 @@ def load_vocab(path: String) raises -> Dict[String, Int]:
     return vocab^
 
 
+def load_vocab_tokens(path: String) raises -> List[String]:
+    """Read `vocab.txt` as an id -> token list, for decoding phrases back to text."""
+    var f = open(path, "r")
+    var text = f.read()
+    f.close()
+    var tokens = List[String]()
+    for line in text.split("\n"):
+        var token = String(line.removesuffix("\r"))
+        if token.byte_length() == 0:
+            continue
+        tokens.append(token)
+    return tokens^
+
+
 def _is_whitespace(c: String) -> Bool:
     var cp = ord(c)
     return cp == 32 or cp == 9 or cp == 10 or cp == 13

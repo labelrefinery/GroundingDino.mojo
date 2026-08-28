@@ -60,7 +60,7 @@ def load_lft(path: String) raises -> Dict[String, Tensor]:
             shape.append(1)
 
         var t = Tensor(shape)
-        var src = (base + off).bitcast[Float32]()
+        var src = (base.unsafe_offset(off)).bitcast[Float32]()
         var dst = t.ptr()
         for i in range(numel):
             dst[unsafe_offset=i] = src[unsafe_offset=i]

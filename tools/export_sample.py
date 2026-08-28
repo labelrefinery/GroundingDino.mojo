@@ -135,6 +135,7 @@ def export(
     (out / f"sample_{index}.txt").write_text(prompt + "\n", encoding="utf-8")
 
     labels = results["text_labels"]
+    (out / f"sample_{index}.labels").write_text("|".join(labels) + "\n", encoding="utf-8")
     print(f"{path.name}: {image.width}x{image.height} -> {tuple(tensors['pixel_values'].shape)}")
     print(f"  prompt: {prompt!r}  tokens: {input_ids.shape[1]}  values: {total / 1e6:.2f}M")
     print(f"  detections ({len(labels)}):")
