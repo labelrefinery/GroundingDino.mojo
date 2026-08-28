@@ -14,13 +14,13 @@ Batch size 1 with no image padding means every vision/text key-padding mask is e
 so only the phrase-block mask has any effect.
 """
 
-from std.math import sqrt, exp, sin, cos
+from std.math import cos, sin, sqrt
 
-from .attention import MASK_NEG, _dot, _axpy, attention_core, multihead_attention
+from .attention import MASK_NEG, _axpy, _dot, attention_core
 from .deform import deformable_attention
 from .io import Config
 from .tensor import (
-    FP, Tensor, add_, add_scaled_, keep_alive, layernorm_named, matmul_nt, relu_, softmax_rows_
+    Tensor, add_, add_scaled_, keep_alive, layernorm_named, matmul_nt, relu_, softmax_rows_
 )
 from .vision import MultiScaleFeatures
 

@@ -17,7 +17,7 @@ from std.time import perf_counter_ns
 
 from groundingdino.image import preprocess
 from groundingdino.io import Config, decode_config, load_lft
-from groundingdino.model import Detection, decode_and_predict, forward, postprocess
+from groundingdino.model import decode_and_predict, forward, postprocess
 from groundingdino.tensor import Tensor, max_abs, max_abs_diff
 from groundingdino.tokenizer import load_vocab, load_vocab_tokens, text_masks, tokenize
 

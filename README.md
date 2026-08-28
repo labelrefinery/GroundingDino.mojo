@@ -125,7 +125,7 @@ case over the three fixtures (COCO street scene at 800×1066, the construction p
 | (b) | BERT last hidden state | 5.1e-6 | 3.6 | ≤ 1e-3 |
 | (b) | text features (after the 768→256 projection) | 1.1e-4 | 133.2 | ≤ 1e-3 |
 | (c) | Swin stage-2/3/4 features | 3.2e-4 | 16.7 | ≤ 1e-3 |
-| (c) | the four projected d=256 levels | 3.2e-4 | 10.3 | ≤ 1e-3 |
+| (c) | the four projected d=256 levels | 2.1e-4 | 10.3 | ≤ 1e-3 |
 | (d) | encoder vision output | 1.3e-5 | 1.4 | ≤ 1e-3 |
 | (d) | encoder text output | 3.7e-5 | 4.5 | ≤ 1e-3 |
 | (e) | decoder hidden, layer 1 of 6 | 3.7e-5 | 3.4 | ≤ 1e-3 |

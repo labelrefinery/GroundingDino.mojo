@@ -10,12 +10,12 @@ Relative position bias arrives from the exporter already expanded to
 `(num_heads, 49, 49)`, so nothing here needs the relative position index table.
 """
 
-from std.math import sqrt, exp
+from std.math import exp, sqrt
 
 from .attention import _axpy, _dot
 from .io import Config
 from .tensor import (
-    FP, Tensor, VW, add_, gelu_, keep_alive, layernorm_named, matmul_nt, matmul_nt_nobias
+    Tensor, add_, gelu_, keep_alive, layernorm_named, matmul_nt, matmul_nt_nobias
 )
 
 comptime SWIN_EPS = Float32(1e-5)

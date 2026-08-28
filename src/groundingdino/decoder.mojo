@@ -8,14 +8,14 @@ after each layer refines the reference boxes through a shared 3-layer MLP in
 inverse-sigmoid space.
 """
 
-from std.math import exp, log, sqrt
+from std.math import exp, log
 
-from .attention import MASK_NEG, attention_core, multihead_attention
+from .attention import multihead_attention
 from .deform import deformable_attention
 from .encoder import sinusoidal_embedding
 from .io import Config
 from .tensor import (
-    FP, Tensor, add_, inverse_sigmoid, keep_alive, layernorm_named, matmul_nt, relu_, sigmoid
+    Tensor, add_, inverse_sigmoid, keep_alive, layernorm_named, matmul_nt, relu_, sigmoid
 )
 from .vision import MultiScaleFeatures
 

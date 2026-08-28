@@ -8,8 +8,7 @@ positions above `text_threshold` decoded back into a phrase).
 
 from .bert import forward as bert_forward, project
 from .decoder import (
-    DecoderOutput, QuerySelection, contrastive_logits, forward as decoder_forward,
-    mlp_head, select_queries
+    DecoderOutput, contrastive_logits, forward as decoder_forward, mlp_head, select_queries
 )
 from .encoder import forward as encoder_forward
 from .io import Config

@@ -9,11 +9,11 @@ Batch size is 1 and no image padding is used, so `pixel_mask` is all ones: the s
 embedding's cumulative sums reduce to row/column indices and all valid ratios are 1.
 """
 
-from std.math import sqrt, exp, sin, cos
+from std.math import cos, sin, sqrt
 
 from .io import Config
 from .swin import FeatureMap
-from .tensor import FP, Tensor, matmul_nt
+from .tensor import Tensor, matmul_nt
 
 comptime GROUP_NORM_EPS = Float32(1e-5)
 comptime GROUP_NORM_GROUPS = 32
