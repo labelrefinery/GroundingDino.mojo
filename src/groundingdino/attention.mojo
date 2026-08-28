@@ -8,7 +8,7 @@ transformers' converted attention masks.
 
 from std.math import sqrt, exp
 
-from .tensor import FP, Tensor, VW, matmul_nt
+from .tensor import FP, Tensor, VW, keep_alive, matmul_nt
 
 comptime MASK_NEG = Float32(-1.0e30)
 """Additive value for masked positions; softmax drives these to exactly zero."""
@@ -74,11 +74,11 @@ def attention_core(
     for h in range(num_heads):
         var off = h * hd
         for i in range(tq):
-            var qrow = qp + i * d + off
-            var mrow = mp + i * tk
+            var qrow = qp.unsafe_offset(i * d + off)
+            var mrow = mp.unsafe_offset(i * tk)
             var mx = MASK_NEG
             for j in range(tk):
-                var s = _dot(qrow, kp + j * d + off, hd) * scale
+                var s = _dot(qrow, kp.unsafe_offset(j * d + off), hd) * scale
                 if use_mask:
                     s += mrow[unsafe_offset=j]
                 sp[unsafe_offset=j] = s
@@ -90,14 +90,12 @@ def attention_core(
                 sp[unsafe_offset=j] = e
                 total += e
             var inv = 1.0 / total
-            var orow = op + i * d + off
+            var orow = op.unsafe_offset(i * d + off)
             for j in range(tk):
                 var p = sp[unsafe_offset=j] * inv
                 if p != 0.0:
-                    _axpy(orow, vp + j * d + off, p, hd)
-    # `scores` is only ever touched through `sp`, so keep it alive past the loops:
-    # Mojo destroys values at their last *use*, which would otherwise be `.ptr()`.
-    _ = scores^
+                    _axpy(orow, vp.unsafe_offset(j * d + off), p, hd)
+    keep_alive(scores)
     return out^
 
 
