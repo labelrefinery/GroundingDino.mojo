@@ -1,0 +1,5 @@
+name = "groundingdino"
+version = "0.1.0"
+description = "Pure-Mojo Grounding DINO (tiny) inference: open-vocabulary 2D detection from a text prompt"
+tags = ["detection", "open-vocabulary", "transformer", "inference", "autolabeling"]
+tins = []

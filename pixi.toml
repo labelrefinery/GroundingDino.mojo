@@ -1,0 +1,44 @@
+[workspace]
+authors = ["Marius S <39998+winding-lines@users.noreply.github.com>"]
+channels = ["https://conda.modular.com/max-nightly", "conda-forge"]
+name = "GroundingDino.mojo"
+platforms = ["osx-arm64", "linux-64"]
+version = "0.1.0"
+preview = ["pixi-build"]
+
+[package]
+name = "groundingdino"
+version = "0.1.0"
+
+[package.build]
+backend = { name = "pixi-build-mojo", version = "0.*" }
+
+[package.build.config.pkg]
+path = "src/groundingdino"
+name = "groundingdino"
+
+# The pixi-build-mojo backend drives the stable `mojo package` flow, so the
+# packaged build pins stable; the source itself also compiles on nightly
+# (see [environments] and CI).
+[package.host-dependencies]
+mojo-compiler = "==1.0.0"
+
+[package.build-dependencies]
+mojo-compiler = "==1.0.0"
+
+[package.run-dependencies]
+mojo-compiler = ">=1.0.0,<2"
+
+[tasks]
+test = "mojo run -I src tests/test_ops.mojo"
+infer = "mojo run -I src src/main.mojo data/weights.lft data/vocab.txt data/sample_0.lft"
+
+[feature.nightly.dependencies]
+modular = ">=26.6.0.dev2026082605,<27"
+
+[feature.stable.dependencies]
+mojo-compiler = "==1.0.0"
+
+[environments]
+default = ["nightly"]
+stable = ["stable"]

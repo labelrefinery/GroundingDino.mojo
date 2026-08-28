@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+*.conda
+
+# Exported weights, vocab and parity samples (weights.lft is ~690 MB)
+data/
+# HuggingFace snapshot cache used by the exporter
+tools/.cache/
+# Downloaded sample images (see tools/images/CREDITS.md)
+tools/images/*.jpg
+tools/images/*.png
