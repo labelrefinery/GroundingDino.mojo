@@ -27,7 +27,6 @@ def load_vocab(path: String) raises -> Dict[String, Int]:
     """Read `vocab.txt`; the 0-based line number is the token id."""
     var f = open(path, "r")
     var text = f.read()
-    f.close()
     var vocab = Dict[String, Int]()
     var idx = 0
     for line in text.split("\n"):
@@ -43,7 +42,6 @@ def load_vocab_tokens(path: String) raises -> List[String]:
     """Read `vocab.txt` as an id -> token list, for decoding phrases back to text."""
     var f = open(path, "r")
     var text = f.read()
-    f.close()
     var tokens = List[String]()
     for line in text.split("\n"):
         var token = String(line.removesuffix("\r"))

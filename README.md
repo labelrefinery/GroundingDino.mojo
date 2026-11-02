@@ -48,13 +48,13 @@ a closed-vocabulary COCO detector cannot serve.
 
 ## Supported Mojo versions
 
-Both **stable Mojo 1.0** and the **Modular nightly** are supported and tested in CI (unit
+Both **stable Mojo 1.2** and the **Modular nightly** are supported and tested in CI (unit
 tests on Linux and macOS-arm64):
 
 | pixi environment | compiler | run it |
 |---|---|---|
-| `default` | nightly (`modular` ≥ 26.6 nightly) | `pixi run test` / `pixi run infer` |
-| `stable` | `mojo-compiler == 1.0.0` | `pixi run -e stable test` |
+| `default` | nightly (`modular` ≥ 26.8 nightly) | `pixi run test` / `pixi run infer` |
+| `stable` | `mojo-compiler == 1.2.0` | `pixi run -e stable test` |
 
 ## Setup
 
@@ -184,7 +184,7 @@ Loading `weights.lft` takes another ~0.3 s. Roughly 700 GFLOP go into one image,
 in the encoder's feed-forward networks and the vision/text fusion projections; the matmul is
 a hand-blocked 6×4 micro-kernel vectorized over the contiguous reduction dimension and
 sustains ~100 GFLOP/s on one M4 performance core. `parallelize` is **not** present in
-`std.algorithm` on the Mojo nightly this repo targets (1.1.0.dev2026082807), so nothing here
+`std.algorithm` on Mojo 1.2 or the current nightly (26.8), so nothing here
 is threaded — see the recommendations below.
 
 ## Limitations
