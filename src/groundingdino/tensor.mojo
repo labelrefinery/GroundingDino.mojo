@@ -12,6 +12,7 @@ single-threaded; the register blocking is what buys the speed.
 """
 
 from std.math import sqrt, exp, erf, log
+from std.memory.alloc import unsafe_alloc
 
 comptime VW = 4
 """SIMD width used by the matmul micro-kernel (NEON f32 lane count)."""
@@ -35,7 +36,7 @@ struct Tensor(Copyable, Movable, Writable):
             n *= d
         self.shape = shape.copy()
         self.size = n
-        self.data = alloc[Float32](n if n > 0 else 1)
+        self.data = unsafe_alloc[Float32](n if n > 0 else 1)
 
     @staticmethod
     def zeros(shape: List[Int]) raises -> Self:
@@ -54,7 +55,7 @@ struct Tensor(Copyable, Movable, Writable):
     def __init__(out self, *, copy: Self):
         self.shape = copy.shape.copy()
         self.size = copy.size
-        self.data = alloc[Float32](copy.size if copy.size > 0 else 1)
+        self.data = unsafe_alloc[Float32](copy.size if copy.size > 0 else 1)
         for i in range(copy.size):
             self.data[unsafe_offset=i] = copy.data[unsafe_offset=i]
 

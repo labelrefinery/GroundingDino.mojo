@@ -61,7 +61,6 @@ def read_ppm(path: String) raises -> Image:
     """Read a binary P6 PPM with maxval 255."""
     var f = open(path, "r")
     var bytes = f.read_bytes()
-    f.close()
     if len(bytes) < 10 or bytes[0] != 80 or bytes[1] != 54:
         raise Error("not a binary PPM (P6): " + path)
     var off = 2

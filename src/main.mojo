@@ -116,7 +116,6 @@ def run_parity(
     var prompt_path = String(sample_path.removesuffix(".lft")) + ".txt"
     var f = open(prompt_path, "r")
     var prompt = String(f.read().strip())
-    f.close()
 
     var vocab = load_vocab(vocab_path)
     var vocab_tokens = load_vocab_tokens(vocab_path)
@@ -251,7 +250,6 @@ def run_parity(
     try:
         var lf = open(labels_path, "r")
         var joined = String(lf.read().strip())
-        lf.close()
         var want_labels = joined.split("|")
         labels_ok = len(want_labels) == len(detections)
         if labels_ok:
@@ -314,9 +312,8 @@ def run_standalone(
                 image_path + "," + d.label + "," + String(d.score) + ","
                 + String(d.x1) + "," + String(d.y1) + "," + String(d.x2) + "," + String(d.y2) + "\n"
             )
-        var f = open(csv_path, "w")
-        f.write(rows)
-        f.close()
+        with open(csv_path, "w") as f:
+            f.write(rows)
         print("wrote", csv_path)
 
 

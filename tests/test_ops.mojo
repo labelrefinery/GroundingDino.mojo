@@ -354,10 +354,6 @@ def test_resize_and_normalize() raises:
 def test_ppm_roundtrip() raises:
     """The PPM reader handles comments and returns channel-first pixel values."""
     var path = String("/tmp/groundingdino_test.ppm")
-    var f = open(path, "w")
-    f.write(String("P6\n# a comment\n2 1\n255\n"))
-    f.close()
-    var g = open(path, "a")
     var payload = List[UInt8]()
     payload.append(255)
     payload.append(0)
@@ -365,8 +361,9 @@ def test_ppm_roundtrip() raises:
     payload.append(0)
     payload.append(128)
     payload.append(255)
-    g.write_bytes(payload)
-    g.close()
+    with open(path, "w") as f:
+        f.write(String("P6\n# a comment\n2 1\n255\n"))
+        f.write_bytes(payload)
 
     var image = read_ppm(path)
     assert_equal(image.width, 2)
